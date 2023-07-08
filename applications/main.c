@@ -17,6 +17,7 @@
 
 int main(void)
 {
+    RadioID_Init();
     Storage_Init();
     led_Init();
     power_on();
@@ -27,8 +28,6 @@ int main(void)
     Heart_Init();
     WiFi_Init();
     InterfaceScan_Init();
-
-
     while (1)
     {
         rt_thread_mdelay(1000);

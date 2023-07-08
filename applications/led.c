@@ -177,20 +177,6 @@ void valve_led_off(void)
     led_stop(valve_status_green);
 }
 
-void valve_led_status(uint8_t state)
-{
-    if (state == 1)
-    {
-        valve_led_on();
-    }
-    else
-    {
-        valve_led_off();
-    }
-}
-
-
-
 void leak_alarm_led_on(void)
 {
     led_start(leak_alarm_red);
@@ -201,47 +187,33 @@ void leak_alarm_led_off(void)
     led_stop(leak_alarm_red);
 }
 
-void leak_alarm_led_status(uint8_t state)
+void tech_alarm_led_on(void)
 {
-    if (state == 1)
-    {
-        leak_alarm_led_on();
-        LOG_W("leak_alarm_led_ON");
-    }
-    else
-    {
-        leak_alarm_led_off();
-        LOG_W("leak_alarm_led_OFF");
-    }
+    led_start(tech_alarm_red);
+    LOG_D("tech_alarm_led_ON");
 }
 
-void tech_alarm_led_status(uint8_t state)
+void tech_alarm_led_off(void)
 {
-    if (state == 1)
-    {
-        led_start(tech_alarm_red);
-        LOG_W("tech_alarm_led_ON");
-    }
-    else
-    {
-        led_stop(tech_alarm_red);
-        LOG_W("tech_alarm_led_OFF");
-    }
+    led_stop(tech_alarm_red);
+    LOG_D("tech_alarm_led_OFF");
 }
 
-
-void lowB_alarm_led_status(uint8_t state)
+void lowB_alarm_led_on(void)
 {
-    if (state == 1)
-    {
-        led_start(lowB_alarm_red);
-        LOG_W("lowB_alarm_led_ON");
-    }
-    else
-    {
-        led_stop(lowB_alarm_red);
-        LOG_W("lowB_alarm_led_OFF");
-    }
+    led_start(lowB_alarm_red);
+}
+
+void lowB_alarm_led_off(void)
+{
+    led_stop(lowB_alarm_red);
+}
+
+void Init_led_state(void)
+{
+    led_stop(tech_alarm_red);
+    led_stop(lowB_alarm_red);
+    led_stop(leak_alarm_red);
 }
 
 void led_test_all_on(void)
@@ -343,6 +315,7 @@ void beep_power(uint8_t count)
     led_set_mode(beep, count, "400,400,");
     led_start(beep);
 }
+MSH_CMD_EXPORT(beep_power, beep_power);
 
 void beep_kick(void)
 {

@@ -657,7 +657,7 @@ void data_handle(unsigned short offset)
 
         upgrade_package_choose(PACKAGE_SIZE);
         firm_update_flag = UPDATE_START_CMD;
-//        wifi_ota_begin(firm_length);
+        wifi_ota_begin(firm_length);
         break;
 
     case UPDATE_TRANS_CMD:                                //升级传输

@@ -22,8 +22,8 @@ static rt_mq_t rf_en_mq;
 
 rt_thread_t rf_encode_t = RT_NULL;
 
-uint32_t Self_ID = 40001010;
-uint32_t Self_Default_Id = 40001010;
+uint32_t Self_ID = 0;
+uint32_t Self_Default_Id = 49000000;
 uint8_t Self_Type = 0;
 
 char radio_send_buf[255];
@@ -35,7 +35,6 @@ uint32_t RadioID_Read(void)
 
 uint8_t DeviceType_Read(void)
 {
-    Self_Type = 0;
     return Self_Type;
 }
 
@@ -137,16 +136,17 @@ uint32_t Get_Self_ID(void)
 }
 void RadioID_Init(void)
 {
-    int *p;
-    p=(int *)(0x08007FF0);
-    Self_ID = *p;
-    if(Self_ID==0xFFFFFFFF || Self_ID==0)
-    {
-        Self_ID = Self_Default_Id;
-    }
+//    int *p;
+//    p=(int *)(0x0803AFF0);
+//    Self_ID = *p;
+//    if(Self_ID==0xFFFFFFFF || Self_ID==0)
+//    {
+//        Self_ID = Self_Default_Id;
+//    }
+    Self_ID = Self_Default_Id;
     if(Self_ID >= 46000001 && Self_ID <= 49999999)
     {
-        Self_Type = 1;
+        Self_Type = 1;//11
     }
     LOG_I("System Version:%s,Radio ID:%ld,Device Type:%d\r\n",MCU_VER,RadioID_Read(),DeviceType_Read());
 }

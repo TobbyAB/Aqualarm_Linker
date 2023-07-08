@@ -15,21 +15,16 @@
 #include "radio_encoder.h"
 
 #define DBG_TAG "WIFI-API"
-#define DBG_LVL DBG_LOG
+#define DBG_LVL DBG_INFO
 #include <rtdbg.h>
 
 char *door_pid = { "emnzq3qxwfplx7db" };
 char *slave_pid = { "lnbkva6cip8dw7vy" };
-//char *main_pid = { "q3xnn9yqt55ifaxm" };
-char *main_pid = { "q3xnn9yqt55ifaxm" };
-
-//char *door_pid = {"nc0ihfxt02ofbrdu"};
-//char *slave_pid = {"kwdm3hiarcekc6lh"};
-//char *main_pid = {"nvyaafd4dexvmlyl"};
+char *main_pid = { "37x0zspuatfwqhmj" };
 
 char *enterprise_door_pid = { "h2hotiru0zxtoyyg" };
 char *enterprise_slave_pid = { "4zfihwwfbsvowhhk" };
-char *enterprise_main_pid = { "q3xnn9yqt55ifaxm" };
+char *enterprise_main_pid = { "oqyavjcnsclnpv3a" };
 
 Remote_Info Remote_Device = { 0 };
 extern Device_Info Global_Device;
@@ -65,7 +60,6 @@ void WariningUpload(uint32_t from_id, uint32_t device_id, uint8_t type, uint8_t 
         {
         case 0: //掉线
             mcu_dp_bool_update(103, value, device_id_buf, my_strlen(device_id_buf)); //BOOL型数据上报;
-            tech_alarm_led_status(value);
             Tech_Alarm_Output(value);
             break;
 
@@ -75,18 +69,15 @@ void WariningUpload(uint32_t from_id, uint32_t device_id, uint8_t type, uint8_t 
                 mcu_dp_bool_update(104, 0, device_id_buf, my_strlen(device_id_buf)); //VALUE型数据上报;
             }
             mcu_dp_enum_update(1, value, device_id_buf, my_strlen(device_id_buf)); //BOOL型数据上报;
-            leak_alarm_led_status(value);
             Leak_Alarm_Output(value);
             break;
         case 2: //电量
             mcu_dp_enum_update(102, value, device_id_buf, my_strlen(device_id_buf)); //BOOL型数据上报;
-            lowB_alarm_led_status(value);
             Low_Battery_Output(value);
 
             break;
         case 3: //掉落
             mcu_dp_bool_update(104, value, device_id_buf, my_strlen(device_id_buf)); //VALUE型数据上报;
-            tech_alarm_led_status(value);
             Tech_Alarm_Output(value);
             break;
         }
@@ -100,27 +91,27 @@ void WariningUpload(uint32_t from_id, uint32_t device_id, uint8_t type, uint8_t 
             {
                 mcu_dp_bool_update(DPID_VALVE1_CHECK_FAIL, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
                 mcu_dp_bool_update(DPID_VALVE1_CHECK_SUCCESS, 1, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
+                Tech_Alarm_selfcheck_Output(value);
             }
             else if (value == 1)
             {
                 mcu_dp_bool_update(DPID_VALVE2_CHECK_FAIL, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
                 mcu_dp_bool_update(DPID_VALVE2_CHECK_SUCCESS, 1, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
+                Tech_Alarm_selfcheck_Output(value);
             }
             else if (value == 2)
             {
                 mcu_dp_bool_update(DPID_TEMP_STATE, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
                 mcu_dp_bool_update(DPID_LINE_STATE, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
                 mcu_dp_bool_update(DPID_VALVE1_CHECK_FAIL, 1, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
-                tech_alarm_led_status(value);
-                Tech_Alarm_Output(value);
+                Tech_Alarm_selfcheck_Output(value);
             }
             else if (value == 3)
             {
                 mcu_dp_bool_update(DPID_TEMP_STATE, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
                 mcu_dp_bool_update(DPID_LINE_STATE, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
                 mcu_dp_bool_update(DPID_VALVE2_CHECK_FAIL, 1, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
-                tech_alarm_led_status(value);
-                Tech_Alarm_Output(value);
+                Tech_Alarm_selfcheck_Output(value);
             }
             break;
         case 1: //漏水
@@ -132,12 +123,10 @@ void WariningUpload(uint32_t from_id, uint32_t device_id, uint8_t type, uint8_t 
                 mcu_dp_bool_update(DPID_LINE_STATE, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
             }
             mcu_dp_bool_update(DPID_DEVICE_ALARM, value, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
-            leak_alarm_led_status(value);
             Leak_Alarm_Output(value);
             break;
         case 2: //掉落
             mcu_dp_bool_update(DPID_LINE_STATE, value, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
-            tech_alarm_led_status(value);
             Tech_Alarm_Output(value);
             break;
         case 3: //NTC
@@ -146,7 +135,6 @@ void WariningUpload(uint32_t from_id, uint32_t device_id, uint8_t type, uint8_t 
                 mcu_dp_bool_update(DPID_LINE_STATE, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
             }
             mcu_dp_bool_update(DPID_TEMP_STATE, value, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
-            tech_alarm_led_status(value);
             Tech_Alarm_Output(value);
             break;
         }
@@ -174,6 +162,8 @@ void InitWarn_Main(uint32_t device_id)
     mcu_dp_bool_update(DPID_VALVE2_CHECK_FAIL, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
     mcu_dp_bool_update(DPID_TEMP_STATE, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
     mcu_dp_bool_update(DPID_LINE_STATE, 0, from_id_buf, my_strlen(from_id_buf)); //BOOL型数据上报;
+    Init_led_state();
+    Init_Interface_state();
     LOG_I("InitWarn_Main ID is %ld\r\n", device_id);
     rt_free(from_id_buf);
 }
@@ -219,8 +209,12 @@ void Gateway_ID_Upload(uint32_t gateway_id)
 
 void MotoStateUpload(uint32_t device_id, uint8_t state)
 {
-    valve_led_status(state);
     Valve_Status_Output(state);
+    if (state == 1)
+    {
+        leak_alarm_led_off();
+        Tech_Alarm_Output_OFF();
+    }
     Remote_Delay_WiFi(device_id, 0);
     Flash_Set_Moto(device_id, state);
     char *Buf = rt_malloc(16);

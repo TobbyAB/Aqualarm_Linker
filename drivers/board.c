@@ -34,3 +34,13 @@ RT_WEAK void rt_hw_board_init()
 #endif
 
 }
+
+static int ota_app_vtor_reconfig(void)
+{
+#define NVIC_VTOR_MASK  0xFFFFF200
+#define RT_APP_PART_ADDR  0x08008000
+    SCB->VTOR = RT_APP_PART_ADDR & NVIC_VTOR_MASK;
+
+    return 0;
+}
+INIT_BOARD_EXPORT(ota_app_vtor_reconfig);

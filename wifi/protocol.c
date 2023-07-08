@@ -1092,10 +1092,10 @@ unsigned char mcu_firm_update_handle(const unsigned char value[],unsigned long p
 {
     //#error "请自行完成MCU固件升级代码,完成后请删除该行"
     if(length == 0) {
-        //wifi_ota_end(value,position);
+        wifi_ota_end(value,position);
         //固件数据发送完成
     }else {
-        //wifi_ota_receive(value,position,length);
+        wifi_ota_receive(value,position,length);
         //固件数据处理
     }
     

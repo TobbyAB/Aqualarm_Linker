@@ -21,9 +21,6 @@
 #define Output_ON     0
 #define Output_OFF    1
 
-uint8_t InputNowStatus = 0;
-uint8_t InputPastStatus = 0;
-
 rt_thread_t Interface_t = RT_NULL;
 
 void Interface_Init()
@@ -48,78 +45,144 @@ void Interface_Init()
 
 void Valve_Status_Output(uint8_t state)
 {
-    if (state == 1)
+    static last_valve_state = 0;
+    LOG_D("LastValveStatus is %d,NowValveState is %d", last_valve_state, state);
+    if (last_valve_state != state)
     {
-        rt_pin_write(Valve_Status_OUT, Output_ON);
-        LOG_W("Valve_Status_OUT_ON");
+        if (state == 1)
+        {
+            valve_led_on();
+            rt_pin_write(Valve_Status_OUT, Output_ON);
+            LOG_D("Valve_Status_OUT_ON");
+        }
+        else
+        {
+            valve_led_off();
+            rt_pin_write(Valve_Status_OUT, Output_OFF);
+            LOG_D("Valve_Status_OUT_oFF");
+        }
     }
-    else
-    {
-        rt_pin_write(Valve_Status_OUT, Output_OFF);
-        LOG_W("Valve_Status_OUT_oFF");
-    }
+    last_valve_state = state;
 }
-MSH_CMD_EXPORT(Valve_Status_Output, Valve_Status_Output);
 
 void Leak_Alarm_Output(uint8_t state)
 {
-    if (state == 1)
+    static last_leak_state = 0;
+    LOG_D("LastLeakStatus is %d,NowLeakState is %d", last_leak_state, state);
+    if (last_leak_state != state)
     {
-        rt_pin_write(Leak_Alarm_OUT, Output_ON);
-        LOG_W("Leak_Alarm_OUT_ON");
+        if (state == 1)
+        {
+            leak_alarm_led_on();
+            rt_pin_write(Leak_Alarm_OUT, Output_ON);
+            LOG_D("Leak_Alarm_OUT_ON");
+        }
+        else
+        {
+            leak_alarm_led_off();
+            rt_pin_write(Leak_Alarm_OUT, Output_OFF);
+            LOG_D("Leak_Alarm_OUT_oFF");
+        }
     }
-    else
-    {
-        rt_pin_write(Leak_Alarm_OUT, Output_OFF);
-        LOG_W("Leak_Alarm_OUT_oFF");
-    }
+    last_leak_state = state;
 }
-MSH_CMD_EXPORT(Leak_Alarm_Output, Leak_Alarm_Output);
 
 void Low_Battery_Output(uint8_t state)
 {
-    if (state == 1)
+    static last_LowB_state = 0;
+    LOG_D("LastLowBStatus is %d,NowLowBState is %d", last_LowB_state, state);
+    if (last_LowB_state != state)
     {
-        rt_pin_write(Leak_Alarm_OUT, Output_ON);
-        LOG_W("Leak_Alarm_OUT_ON");
+        if (state == 1)
+        {
+            lowB_alarm_led_on();
+            rt_pin_write(Low_Battery_OUT, Output_ON);
+            LOG_D("Low_Battery_OUT_ON");
+        }
+        else
+        {
+            lowB_alarm_led_off();
+            rt_pin_write(Low_Battery_OUT, Output_OFF);
+            LOG_D("Low_Battery_OUT_oFF");
+        }
+    }
+    last_LowB_state = state;
+}
+
+void Tech_Alarm_selfcheck_Output(uint8_t state)
+{
+    if (state == 0 || state == 1)
+    {
+        tech_alarm_led_on();
+        rt_pin_write(Tech_Alarm_OUT, Output_OFF);
+        LOG_D("Tech_Alarm_OUT_oFF");
     }
     else
     {
-        rt_pin_write(Leak_Alarm_OUT, Output_OFF);
-        LOG_W("Leak_Alarm_OUT_oFF");
+        tech_alarm_led_off();
+        rt_pin_write(Tech_Alarm_OUT, Output_ON);
+        LOG_D("Tech_Alarm_OUT_ON");
     }
 }
-MSH_CMD_EXPORT(Low_Battery_Output, Low_Battery_Output);
 
 void Tech_Alarm_Output(uint8_t state)
 {
-    if (state == 1)
+    static last_TechA_state = 0;
+    LOG_D("LastTechAStatus is %d,NowTechAState is %d", last_TechA_state, state);
+    if (last_TechA_state != state)
     {
-        rt_pin_write(Tech_Alarm_OUT, Output_ON);
-        LOG_W("Tech_Alarm_OUT_ON");
+        if (state == 1)
+        {
+            tech_alarm_led_on();
+            rt_pin_write(Tech_Alarm_OUT, Output_ON);
+            LOG_D("Tech_Alarm_OUT_ON");
+
+        }
+        else
+        {
+            tech_alarm_led_off();
+            rt_pin_write(Tech_Alarm_OUT, Output_OFF);
+            LOG_D("Tech_Alarm_OUT_oFF");
+        }
     }
-    else
-    {
-        rt_pin_write(Tech_Alarm_OUT, Output_OFF);
-        LOG_W("Tech_Alarm_OUT_oFF");
-    }
+    last_TechA_state = state;
 }
+
+void Tech_Alarm_Output_OFF(void)
+{
+    rt_pin_write(Tech_Alarm_OUT, Output_OFF);
+}
+
 MSH_CMD_EXPORT(Tech_Alarm_Output, Tech_Alarm_Output);
 
 void Spare_Alarm_Output(uint8_t state)
 {
-    if (state == 1)
+    static last_SpareA_state = 0;
+    LOG_D("LastSpareAStatus is %d,NowTechAState is %d", last_SpareA_state, state);
+    if (last_SpareA_state != state)
     {
-        rt_pin_write(Spare_Alarm_OUT, Output_ON);
-        LOG_W("Spare_Alarm_OUT_ON");
+        if (state == 1)
+        {
+            rt_pin_write(Tech_Alarm_OUT, Output_ON);
+            LOG_D("Tech_Alarm_OUT_ON");
+        }
+        else
+        {
+            rt_pin_write(Tech_Alarm_OUT, Output_OFF);
+            LOG_D("Tech_Alarm_OUT_oFF");
+        }
     }
-    else
-    {
-        rt_pin_write(Spare_Alarm_OUT, Output_OFF);
-        LOG_W("Tech_Alarm_OUT_oFF");
-    }
+    last_SpareA_state = state;
 }
-MSH_CMD_EXPORT(Spare_Alarm_Output, Spare_Alarm_Output);
+
+void Init_Interface_state(void)
+{
+    rt_pin_write(Valve_Status_OUT, Output_OFF);
+    rt_pin_write(Leak_Alarm_OUT, Output_OFF);
+    rt_pin_write(Low_Battery_OUT, Output_OFF);
+    rt_pin_write(Tech_Alarm_OUT, Output_OFF);
+    rt_pin_write(Spare_Alarm_OUT, Output_OFF);
+}
 
 uint8_t Get_Input_Control_Level(void)
 {
@@ -128,16 +191,19 @@ uint8_t Get_Input_Control_Level(void)
 
 void InterfaceScan_Callback(void *parameter)
 {
-    uint8_t Input_Control_Level = 0;
+    uint8_t InputNowStatus = 0, InputPastStatus = 0;
     uint32_t Linker_MainID;
     LOG_D("Input_Control Init Success\r\n");
     Linker_MainID = GetMainValidInLinker();
     while (1)
     {
-        Input_Control_Level = Get_Input_Control_Level();
-        if (Input_Control_Level == 0)
+        if (Get_Input_Control_Level() == 0)
         {
-            InputNowStatus = 1; //输入控制开阀
+            rt_thread_mdelay(50);
+            if (Get_Input_Control_Level() == 0)
+            {
+                InputNowStatus = 1; //输入控制开阀
+            }
         }
         else
         {
@@ -159,7 +225,7 @@ void InterfaceScan_Callback(void *parameter)
                 Moto_CloseRemote(Linker_MainID);
             }
         }
-        rt_thread_mdelay(100);
+        rt_thread_mdelay(1000);
     }
 }
 

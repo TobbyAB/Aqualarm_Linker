@@ -27,16 +27,14 @@
                             1:修改产品信息
 ******************************************************************************/
 //pid信息，服务端自动插入
-#define MAIN_PRODUCT_KEY "q3xnn9yqt55ifaxm"    //开发平台创建产品后生成的16位字符产品唯一标识
-//#define MAIN_PRODUCT_KEY "deyjzxug6mw3tch3"    //开发平台创建产品后生成的16位字符产品唯一标识
-//#define GW_PERSONAL_PRODUCT_KEY "19tgfa05ptvrapap"    //开发平台创建产品后生成的16位字符产品唯一标识
-//#define GW_ENTERPRISE_PRODUCT_KEY "newi1yunhoak3pjn"    //开发平台创建产品后生成的16位字符产品唯一标识
+#define MAIN_PRODUCT_KEY "oqyavjcnsclnpv3a"    //开发平台创建产品后生成的16位字符产品唯一标识
+#define GW_PRODUCT_KEY "y1x9d5k8apqmawr2"    //开发平台创建产品后生成的16位字符产品唯一标识
 
-#define GW_PERSONAL_PRODUCT_KEY "y1x9d5k8apqmawr2"    //GW_First
-//#define GW_PERSONAL_PRODUCT_KEY "y1x9d5k8apqmawr2"    // Link
-#define GW_ENTERPRISE_PRODUCT_KEY "y1x9d5k8apqmawr2"    //开发平台创建产品后生成的16位字符产品唯一标识
 
-#define MCU_VER "1.0.0"                                 //用户的软件版本,用于MCU固件升级,MCU升级版本需修改
+#define GW_PERSONAL_PRODUCT_KEY "y1x9d5k8apqmawr2"      //Gateway Link Personal Edition(HW1.0)
+#define GW_ENTERPRISE_PRODUCT_KEY "juhwsskmdqvnfaqk"    //Gateway Link Enterprise Edition(HW1.0)
+
+#define MCU_VER "2.2.5"                      //用户的软件版本,用于MCU固件升级,MCU升级版本需修改
 
 //配网方式选择,默认为CONFIG_MODE_DEFAULT,只能三选一
 #define CONFIG_MODE     CONFIG_MODE_DEFAULT             //默认配网方式
